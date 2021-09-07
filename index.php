@@ -3,6 +3,6 @@
     require_once("Config.php");
 
     $usuario = new Usuario();
-    $usuario->getById(5);
+    $usuario->getByName('Ewerton Oliva Leal');
     echo $usuario;
 ?>

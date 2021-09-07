@@ -2,7 +2,7 @@
 
   class Sql extends PDO
   {
-      private $conn;
+    private $conn;
 
     public function __construct()
     {
