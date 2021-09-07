@@ -161,6 +161,44 @@
             return $result = $sql->select("SELECT * FROM `tb_usuarios`");
         }
 
+        public function criarUsuario($nome, $email, $senha)
+        {
+            $sql = new Sql();
+
+            $results = $sql->setQuery("INSERT INTO `tb_usuarios`(`id`, `nome`, `email`, `senha`) VALUES ('NULL', :NOME, :EMAIL, :SENHA)", array(
+                ":NOME"  => "$nome",
+                ":EMAIL" => "$email",
+                ":SENHA" => "$senha"
+            ));
+
+            echo "Usuário cadastrado com sucesso";
+
+        }
+
+        public function atualizarNome($nomeAntigo, $nomeNovo)
+        {
+            $sql = new Sql();
+
+            $results = $sql->setQuery("UPDATE `tb_usuarios` SET nome = :NOMENEW WHERE nome = :NOMEOLD", array(
+                ":NOMEOLD" => $nomeAntigo,
+                ":NOMENEW" => $nomeNovo
+            ));
+
+            echo "Nome do usuário $nomeAntigo, alterado para: $nomeNovo";
+
+        }
+
+        public function removerUsuario($id)
+        {
+            $sql = new Sql();
+
+            $results = $sql->setQuery("DELETE FROM `tb_usuarios` WHERE id = :ID", array(
+                ":ID" => $id
+            ));
+
+            echo "Usuário ID: $id removido com sucesso!";
+        }
+
     }
 
 ?>
