@@ -7,6 +7,17 @@
         private $email;
         private $senha;
 
+
+        public function __toString():string
+        {
+            return json_encode(array(
+                "id"    => $this->getId(),
+                "nome"  => $this->getNome(),
+                "email" => $this->getEmail(),
+                "senha" => $this->getSenha()
+            ));
+        }
+
         public function getId()
         {
             return $this->id;
@@ -37,12 +48,12 @@
             $this->email = $email;
         }
 
-        public function getSenha()
+        private function getSenha()
         {
             return $this->senha;
         }
 
-        public function setSenha($senha)
+        private function setSenha($senha)
         {
             $this->senha = $senha;
         }
@@ -67,30 +78,53 @@
 
         }
 
-        public function getByName($nome):void
+        public function getByName($nome)
         {
             $sql = new Sql();
 
             $results = $sql->select("SELECT * FROM `tb_usuarios` WHERE nome = :NOME", array(
-                ":NOME" => $nome
+                ":NOME" => "$nome"
             ));
 
-            if(count($results) > 0 ) {
-                foreach($results as $result) {
-                    echo json_encode($result)."<br>";
-                }
+            if(count($results) > 0) {
+                $row = $results[0];
+
+                $this->setId($row['id']);
+                $this->setNome($row['nome']);
+                $this->setEmail($row['email']);
+                $this->setSenha($row['senha']);
+
             } else {
                 echo "nenhum registro encontrado";
             }
-
+        
         }
 
-        public static function getByMail($email):void
+        public function getByMail($email)
         {
             $sql = new Sql();
 
-            $results = $sql->select("SELECT * FROM `tb_usuarios` WHERE email = :EMAIL", array(
-                ":EMAIL" => $email
+            $results = $sql->select("SELECT * FROM `tb_usuarios` WHERE email = :EMAIL ORDER BY id", array(
+                ":EMAIL" => "$email"
+            ));
+
+            if(count($results) > 0) {
+                $row = $results[0];
+
+                $this->setId($row['id']);
+                $this->setNome($row['nome']);
+                $this->setEmail($row['email']);
+                $this->setSenha($row['senha']);
+            }
+
+        }
+
+        public function getNameList($nome):void
+        {
+            $sql = new Sql();
+
+            $results = $sql->select("SELECT * FROM `tb_usuarios` WHERE nome LIKE :NOME", array(
+                ":NOME" => "%$nome%"
             ));
 
             if(count($results) > 0 ) {
@@ -103,14 +137,22 @@
 
         }
 
-        public function __toString():string
+        public static function getMailList($email): void
         {
-            return json_encode(array(
-                "id"    => $this->getId(),
-                "nome"  => $this->getNome(),
-                "email" => $this->getEmail(),
-                "senha" => $this->getSenha()
+            $sql = new Sql();
+
+            $results = $sql->select("SELECT * FROM `tb_usuarios` WHERE email LIKE :EMAIL", array(
+                ":EMAIL" => "%$email%"
             ));
+
+            if(count($results) > 0 ) {
+                foreach($results as $result) {
+                    echo json_encode($result)."<br>";
+                }
+            } else {
+                echo "nenhum registro encontrado";
+            }
+
         }
 
         public static function getList():array
