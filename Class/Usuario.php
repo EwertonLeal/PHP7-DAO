@@ -47,7 +47,7 @@
             $this->senha = $senha;
         }
 
-        public function getById($id)
+        public function getById($id):void
         {
             $sql = new Sql();
 
@@ -67,7 +67,7 @@
 
         }
 
-        public function getByName($nome)
+        public function getByName($nome):void
         {
             $sql = new Sql();
 
@@ -75,19 +75,17 @@
                 ":NOME" => $nome
             ));
 
-            if(count($results) > 0) {
-                $row = $results[0];
-
-                $this->setId($row['id']);
-                $this->setNome($row['nome']);
-                $this->setEmail($row['email']);
-                $this->setSenha($row['senha']);
-
+            if(count($results) > 0 ) {
+                foreach($results as $result) {
+                    echo json_encode($result)."<br>";
+                }
+            } else {
+                echo "nenhum registro encontrado";
             }
 
         }
 
-        public function getByMail($email)
+        public static function getByMail($email):void
         {
             $sql = new Sql();
 
@@ -95,19 +93,17 @@
                 ":EMAIL" => $email
             ));
 
-            if(count($results) > 0) {
-                $row = $results[0];
-
-                $this->setId($row['id']);
-                $this->setNome($row['nome']);
-                $this->setEmail($row['email']);
-                $this->setSenha($row['senha']);
-
+            if(count($results) > 0 ) {
+                foreach($results as $result) {
+                    echo json_encode($result)."<br>";
+                }
+            } else {
+                echo "nenhum registro encontrado";
             }
 
         }
 
-        public function __toString()
+        public function __toString():string
         {
             return json_encode(array(
                 "id"    => $this->getId(),
@@ -115,6 +111,12 @@
                 "email" => $this->getEmail(),
                 "senha" => $this->getSenha()
             ));
+        }
+
+        public static function getList():array
+        {
+            $sql = new Sql();
+            return $result = $sql->select("SELECT * FROM `tb_usuarios`");
         }
 
     }
